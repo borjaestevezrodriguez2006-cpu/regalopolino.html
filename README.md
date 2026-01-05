@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Regalo de Reyes 🎁</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #6ee7d8, #3bbfad);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .card {
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 420px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      transform: scale(0);
+      animation: cardAppear 0.6s forwards;
+    }
+    @keyframes cardAppear {
+      to { transform: scale(1); }
+    }
+    h1 { font-size: 1.8em; }
+    p { font-size: 1.1em; }
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 1em;
+      border: none;
+      border-radius: 30px;
+      background: #ff9f7f;
+      color: white;
+      cursor: pointer;
+      display: inline-block;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.3s, background 0.3s;
+    }
+    button:hover {
+      background: #ff5252;
+      transform: scale(1.05);
+    }
+    .hidden { display: none; }
+    .emoji {
+      font-size: 2.5em;
+      opacity: 0;
+      animation: emojiFadeIn 0.5s forwards;
+    }
+    @keyframes emojiFadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .step {
+      animation: fadeStep 0.5s;
+    }
+    @keyframes fadeStep {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .confetti {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+      pointer-events: none;
+      overflow: visible;
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: #ff5252;
+      opacity: 0.8;
+      transform: rotate(45deg);
+      animation: confettiFall linear forwards;
+    }
+    @keyframes confettiFall {
+      to {
+        transform: translate(var(--x), var(--y)) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="step" id="step1">
+      <div class="emoji">👑🎁</div>
+      <h1>Regalo de Reyes</h1>
+      <p>Advertencia: este regalo puede provocar hambre, sonrisas y ganas de arreglarse.</p>
+      <button>Continuar bajo tu propia responsabilidad</button>
+    </div>
+
+    <div class="step hidden" id="step2">
+      <div class="emoji">🤔</div>
+      <h1>Te doy una pista</h1>
+      <p>No se pide, pasa por delante de nuestros ojos y está muy rico.</p>
+      <button>Y es…</button>
+    </div>
+
+    <div class="step hidden" id="step3">
+      <div class="emoji">🍣🚂</div>
+      <h1>¡Sorpresa!</h1>
+      <p><strong>Cena para dos en un buffet de sushi</strong></p>
+      <p>Incluye: comida rica, risas y un buen paseíto.</p>
+      <p><em>Yo invito. Tú disfrutas.</em></p>
+      <p>Cuando quieras, abrimos el bono y lo hacemos realidad 😊</p>
+    </div>
+  </div>
+
+  <div class="confetti"></div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const steps = document.querySelectorAll('.step');
+      let current = 0;
+      const confettiContainer = document.querySelector('.confetti');
+
+      function spawnConfetti() {
+        for (let i = 0; i < 30; i++) {
+          const piece = document.createElement('div');
+          piece.classList.add('confetti-piece');
+          const x = Math.random() * window.innerWidth + 'px';
+          const y = window.innerHeight + 'px';
+          piece.style.setProperty('--x', x);
+          piece.style.setProperty('--y', y);
+          piece.style.left = Math.random() * window.innerWidth + 'px';
+          piece.style.top = '-10px';
+          piece.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+          piece.style.animationDuration = 2 + Math.random() * 3 + 's';
+          confettiContainer.appendChild(piece);
+          setTimeout(() => piece.remove(), 5000);
+        }
+      }
+
+      function goNext(e) {
+        e.preventDefault();
+        if (current < steps.length - 1) {
+          steps[current].classList.add('hidden');
+          current++;
+          steps[current].classList.remove('hidden');
+          if (current === steps.length - 1) spawnConfetti();
+        }
+      }
+
+      document.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', goNext);
+        btn.addEventListener('touchstart', goNext);
+      });
+    });
+  </script>
+</body>
+</html>
